@@ -149,10 +149,10 @@ export default function KanbanCard({ card, onClick, isDragging }: Props) {
             <button
               {...attributes}
               {...listeners}
-              className="text-slate-400 hover:text-slate-600 cursor-grab active:cursor-grabbing transition-colors"
+              className="flex items-center justify-center w-8 h-8 -m-1.5 rounded-md text-slate-300 hover:text-slate-600 hover:bg-slate-100 cursor-grab active:cursor-grabbing active:bg-slate-200 transition-colors touch-none"
               onClick={(e) => e.stopPropagation()}
             >
-              <GripVertical className="h-4 w-4" />
+              <GripVertical className="h-5 w-5" />
             </button>
             <span
               className={cn(

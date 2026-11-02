@@ -261,6 +261,7 @@ export default function BoardScreenPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [gridResetTrigger, setGridResetTrigger] = useState(0);
   const movingCountRef = useRef(0);
+  const redCardUpdatingRef = useRef(0);
   const columnsSnapshotRef = useRef<BoardColumn[]>([]);
   const columnsRef = useRef(columns);
   columnsRef.current = columns;
@@ -339,7 +340,7 @@ export default function BoardScreenPage() {
   }
 
   const fetchColumns = useCallback(async () => {
-    if (movingCountRef.current > 0) return;
+    if (movingCountRef.current > 0 || redCardUpdatingRef.current > 0) return;
     try {
       const res = await fetch("/api/board/columns");
       if (res.ok) setColumns(await res.json());
@@ -348,11 +349,18 @@ export default function BoardScreenPage() {
 
   const updateRedCard = useCallback(async (columnId: string, count: number) => {
     setColumns(prev => prev.map(c => c.id === columnId ? { ...c, redCardCount: count } : c));
-    await fetch("/api/board/columns", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: columnId, redCardCount: count }),
-    });
+    redCardUpdatingRef.current++;
+    try {
+      await fetch("/api/board/columns", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: columnId, redCardCount: count }),
+      });
+    } finally {
+      setTimeout(() => {
+        redCardUpdatingRef.current = Math.max(0, redCardUpdatingRef.current - 1);
+      }, 2000);
+    }
   }, []);
 
   const fetchFeed = useCallback(async () => {
