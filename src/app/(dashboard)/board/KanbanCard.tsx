@@ -240,8 +240,14 @@ export default function KanbanCard({ card, onClick, isDragging }: Props) {
       )}
 
       {/* Tags */}
-      {card.tags.length > 0 && (
+      {true && (
         <div className="flex flex-wrap gap-1 mb-2">
+          <span
+            className="px-1.5 py-0.5 text-[10px] font-medium rounded"
+            style={{ backgroundColor: "#8b5cf620", color: "#8b5cf6" }}
+          >
+            test
+          </span>
           {card.tags.map((t) => (
             <span
               key={t.id}
